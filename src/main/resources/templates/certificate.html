@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        @page {
+            size: A4 landscape; /* Set landscape orientation */
+            margin: 0mm;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        @font-face {
+            font-family: 'BukhariScript-Regular';
+            src: url('http://localhost:8080/fonts/BukhariScript-Regular.ttf');
+            -fs-pdf-font-embed: embed;
+            -fs-pdf-font-encoding: Identity-H;
+        }
+
+        @font-face {
+            font-family: 'Lobster-Regular';
+            src: url('http://localhost:8080/fonts/Lobster-Regular.ttf');
+            -fs-pdf-font-embed: embed;
+            -fs-pdf-font-encoding: Identity-H;
+        }
+
+        @font-face {
+            font-family: 'Arimo';
+            src: url('http://localhost:8080/fonts/Arimo-VariableFont_wght.ttf');
+            -fs-pdf-font-embed: embed;
+            -fs-pdf-font-encoding: Identity-H;
+        }
+
+        .certificate-body {
+            width: 100%;
+            height: 100%;
+
+            background-image: url('http://localhost:8080/images/background.png');
+            background-size: 98.2%;
+            background-position: 10px 10px;
+            background-repeat: no-repeat;
+            background-clip: content-box;
+            background-origin: content-box;
+        }
+
+        .certificate-header {
+            display: flex;
+            justify-content: center;
+            position: absolute;
+            left: 412px;
+            top: 128px;
+            text-align: center;
+            width: 630px;
+        }
+
+        h1{
+            font-family: BukhariScript-Regular;
+            font-size: 31px;
+            color: #346d9a;
+            margin-top: 60px;
+            margin-bottom: 0px;
+        }
+
+        .certificate-donor {
+            font-family: Lobster-Regular;
+            font-size:36.5px;
+            color: #8d5778;
+            margin-bottom: 50px;
+        }
+
+        .certificate-text {
+            font-size: 14px;
+            font-family: Arimo;
+        }
+
+        .certificate-given-to {
+            color: #346d9a;
+            font-family: Arimo;
+            font-size: 15.5px;
+        }
+
+        .certificate-signature {
+            position: absolute;
+            left: 412px;
+            top: 680px;
+            width: 665px;
+        }
+
+        .certificate-signature-director {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .certificate-signature-name {
+            font-family: BukhariScript-Regular;
+            font-size: 17px;
+            color: #346d9a;
+        }
+
+        .certificate-signature-position {
+            color: #346d9a;
+            font-family: Arimo;
+            font-size: 12px;
+        }
+
+        .certificate-crest {
+            position: absolute;
+            top: -15px;
+            right: 0;
+        }
+
+        .certificate-date {
+            position: absolute;
+            top: 0;
+            right: 100px;
+            color: #346d9a;
+            font-family: Arimo;
+            font-size: 15.5px;
+        }
+
+    </style>
+    <title>Sample PDF</title>
+</head>
+<body>
+    <div class="certificate-body" >
+        <div class="certificate-header">
+            <img class="certificate-logo" alt="bear-logo" src="http://localhost:8080/images/bear-logo.png" />
+            <h1>СЕРТИФИКАТ ЗА ДАРЕНИЕ</h1>
+            <div class="certificate-given-to">се връчва на</div>
+            <div class="certificate-donor" th:text="${name}"></div>
+            <div class="certificate-text">
+                Семейството на Сдружение "Операция: Плюшено Мече" желае да изкаже дълбоката си благодарност и признателност към [[${name}]]
+                за направеното <b>дарение от [[${amount}]] лева на 01.11.2024 година с цел подкрепа на Стоян Снежанов</b>, част от менторска програма “Скритите таланти на България”.
+                <br/>
+                Благодарим Ви за помощта и доверието!
+            </div>
+        </div>
+
+        <div class="certificate-signature">
+            <div class="certificate-signature-director">
+                <div class="certificate-signature-name">
+                    Михаела Стойкова
+                </div>
+                <div class="certificate-signature-position">
+                    Основател и ръководител
+                </div>
+            </div>
+            <div class="certificate-date">
+                29.11.2024
+            </div>
+            <img class="certificate-crest" alt="certificate-crest" src="http://localhost:8080/images/crest.png" />
+        </div>
+    </div>
+</body>
+</html>

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,18 +29,24 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
     protected void handleStripeObject(StripeObject stripeObject) throws Exception {
         Charge charge = (Charge) stripeObject;
         String name = charge.getBillingDetails().getName();
-        long amount = charge.getAmount();
+        BigDecimal amount = formatAmount(charge.getAmount());
 
         Map<String, Object> templateVariables = Map.of(
                 "name", name,
-                "amount", amount // FIXME - this amount is in cents!
+                "amount", amount.doubleValue()
         );
         byte[] pdf = createPdf(templateVariables);
         Path path = Paths.get("output.pdf");
         Files.write(path, pdf);
-        System.out.println("WRITTEN IN " + path.toAbsolutePath());
     }
 
+    private BigDecimal formatAmount(long amountInCents) {
+        BigDecimal centsBigDecimal = new BigDecimal(amountInCents);
+        BigDecimal dollars = centsBigDecimal
+                .setScale(2, RoundingMode.HALF_UP)
+                .divide(new BigDecimal(100));
+        return dollars;
+    }
     private byte[] createPdf(Map<String, Object> templateVariables) {
         Context context = new Context();
         context.setVariables(templateVariables);

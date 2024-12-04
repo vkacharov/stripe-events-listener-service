@@ -133,10 +133,10 @@
             <img class="certificate-logo" alt="bear-logo" src="http://localhost:8080/images/bear-logo.png" />
             <h1>СЕРТИФИКАТ ЗА ДАРЕНИЕ</h1>
             <div class="certificate-given-to">се връчва на</div>
-            <div class="certificate-donor" th:text="${name}"></div>
+            <div class="certificate-donor" th:text="${donorName}"></div>
             <div class="certificate-text">
                 Семейството на Сдружение "Операция: Плюшено Мече" желае да изкаже дълбоката си благодарност и признателност към [[${name}]]
-                за направеното <b>дарение от [[${amount}]] лева на 01.11.2024 година с цел подкрепа на Стоян Снежанов</b>, част от менторска програма “Скритите таланти на България”.
+                за направеното дарение от [[${amount}]] [[${currency}]] на [[${donationDate}]] в подкрепа на [[${cause}]].
                 <br/>
                 Благодарим Ви за помощта и доверието!
             </div>
@@ -152,7 +152,7 @@
                 </div>
             </div>
             <div class="certificate-date">
-                29.11.2024
+                [[${donationDate}]]
             </div>
             <img class="certificate-crest" alt="certificate-crest" src="http://localhost:8080/images/crest.png" />
         </div>

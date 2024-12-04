@@ -19,12 +19,11 @@ public class PdfService {
 
     public byte[] generatePdf(String templateName, Context context) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            // Generate HTML from Thymeleaf template
             String html = templateEngine.process(templateName, context);
 
             Document doc = Jsoup.parse(html);
             doc.outputSettings().syntax( Document.OutputSettings.Syntax.xml);
-            // Render PDF using Flying Saucer
+
             ITextRenderer renderer = new ITextRenderer();
 
             renderer.setDocumentFromString(doc.html());
@@ -33,7 +32,6 @@ public class PdfService {
             renderer.finishPDF();
 
            return outputStream.toByteArray();
-            //return doc.html().getBytes();
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate PDF", e);
         }

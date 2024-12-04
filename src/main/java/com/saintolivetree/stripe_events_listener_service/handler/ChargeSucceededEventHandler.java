@@ -1,5 +1,7 @@
 package com.saintolivetree.stripe_events_listener_service.handler;
 
+import com.saintolivetree.stripe_events_listener_service.dto.DonationDetails;
+import com.saintolivetree.stripe_events_listener_service.service.DonationDetailsService;
 import com.saintolivetree.stripe_events_listener_service.service.MailService;
 import com.saintolivetree.stripe_events_listener_service.service.PdfService;
 import com.stripe.model.Charge;
@@ -21,6 +23,9 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
     @Autowired
     MailService mailService;
 
+    @Autowired
+    DonationDetailsService donationDetailsService;
+
     @Override
     public String getEventType() {
         return "charge.succeeded";
@@ -29,28 +34,16 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
     @Override
     protected void handleStripeObject(StripeObject stripeObject) throws Exception {
         Charge charge = (Charge) stripeObject;
-        String name = charge.getBillingDetails().getName();
-        BigDecimal amount = formatAmount(charge.getAmount());
-
-        Map<String, Object> templateVariables = Map.of(
-                "name", name,
-                "amount", amount.doubleValue()
-        );
+        DonationDetails donationDetails = donationDetailsService.extractDonationDetails(charge);
+        Map<String, Object> templateVariables = donationDetails.toMap();
         byte[] pdf = createPdf(templateVariables);
         mailService.sendEmail(
                 "velizar.kacharov@gmail.com",
-                "Test email",
-                "This is a test email from Plushenomeche",
+                "Благодарим ви за Вашето дарение",
+                "Екипът на Сдружение Операция: Плюшено Мече Ви благодари за Вашето дарение.",
                 pdf);
     }
 
-    private BigDecimal formatAmount(long amountInCents) {
-        BigDecimal centsBigDecimal = new BigDecimal(amountInCents);
-        BigDecimal dollars = centsBigDecimal
-                .setScale(2, RoundingMode.HALF_UP)
-                .divide(new BigDecimal(100));
-        return dollars;
-    }
     private byte[] createPdf(Map<String, Object> templateVariables) {
         Context context = new Context();
         context.setVariables(templateVariables);

@@ -17,21 +17,21 @@
 
         @font-face {
             font-family: 'BukhariScript-Regular';
-            src: url('http://localhost:8080/fonts/BukhariScript-Regular.ttf');
+            src: url('classpath:/static/fonts/BukhariScript-Regular.ttf');
             -fs-pdf-font-embed: embed;
             -fs-pdf-font-encoding: Identity-H;
         }
 
         @font-face {
             font-family: 'Lobster-Regular';
-            src: url('http://localhost:8080/fonts/Lobster-Regular.ttf');
+            src: url('classpath:/static/fonts/Lobster-Regular.ttf');
             -fs-pdf-font-embed: embed;
             -fs-pdf-font-encoding: Identity-H;
         }
 
         @font-face {
             font-family: 'Arimo';
-            src: url('http://localhost:8080/fonts/Arimo-VariableFont_wght.ttf');
+            src: url('classpath:/static/fonts/Arimo-VariableFont_wght.ttf');
             -fs-pdf-font-embed: embed;
             -fs-pdf-font-encoding: Identity-H;
         }
@@ -40,7 +40,7 @@
             width: 100%;
             height: 100%;
 
-            background-image: url('http://localhost:8080/images/background.png');
+            background-image: url('classpath:/static/images/background.png');
             background-size: 98.2%;
             background-position: 10px 10px;
             background-repeat: no-repeat;
@@ -130,7 +130,7 @@
 <body>
     <div class="certificate-body" >
         <div class="certificate-header">
-            <img class="certificate-logo" alt="bear-logo" src="http://localhost:8080/images/bear-logo.png" />
+            <img class="certificate-logo" alt="bear-logo" src="classpath:/static/images/bear-logo.png" />
             <h1>СЕРТИФИКАТ ЗА ДАРЕНИЕ</h1>
             <div class="certificate-given-to">се връчва на</div>
             <div class="certificate-donor" th:text="${donorName}"></div>
@@ -154,7 +154,8 @@
             <div class="certificate-date">
                 [[${donationDate}]]
             </div>
-            <img class="certificate-crest" alt="certificate-crest" src="http://localhost:8080/images/crest.png" />
+            лого
+            <img class="certificate-crest" alt="certificate-crest" src="classpath:/static/images/crest.png" />
         </div>
     </div>
 </body>

@@ -37,6 +37,7 @@ public class DonationDetailsService {
         long chargeTimestamp = charge.getCreated() * 1000; // Stripe timestamp is in seconds
         String donationDate = extractDate(chargeTimestamp);
         String certificateDate = extractDate(System.currentTimeMillis());
+        String donorId = charge.getCustomer();
         return DonationDetails.builder()
                 .donorName(donorName)
                 .donorEmail(donorEmail)
@@ -45,6 +46,7 @@ public class DonationDetailsService {
                 .cause(cause)
                 .donationDate(donationDate)
                 .certificateDate(certificateDate)
+                .donorId(donorId)
                 .build();
     }
 

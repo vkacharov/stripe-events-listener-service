@@ -1,8 +1,7 @@
 package com.saintolivetree.stripe_events_listener_service.web.controller;
 
 import com.saintolivetree.stripe_events_listener_service.handler.StripeEventHandler;
-import com.saintolivetree.stripe_events_listener_service.model.DonorNotification;
-import com.saintolivetree.stripe_events_listener_service.repository.DonorNotificationRepository;
+import com.saintolivetree.stripe_events_listener_service.service.DonorNotificationStatusService;
 import com.saintolivetree.stripe_events_listener_service.service.StripeService;
 import com.stripe.model.Event;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +19,7 @@ public class WebhookController {
     private StripeEventHandler stripeEventHandler; //FIXME
 
     @Autowired
-    private DonorNotificationRepository donorNotificationRepository;
+    private DonorNotificationStatusService donorNotificationStatusService;
 
     @PostMapping("/webhook")
     public void generatePdf(@RequestBody String payload,
@@ -39,9 +38,7 @@ public class WebhookController {
 
     @GetMapping("/unsubscribe")
     public ResponseEntity<Void> unsubscribe(@RequestParam(name = "d") String donorId) {
-        DonorNotification donorNotification = new DonorNotification(donorId,
-                DonorNotification.NotificationStatus.DISABLED);
-        donorNotificationRepository.save(donorNotification);
+        donorNotificationStatusService.unsubscribe(donorId);
         return ResponseEntity.noContent().build();
     }
 }

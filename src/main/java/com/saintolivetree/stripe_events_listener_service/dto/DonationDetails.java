@@ -1,11 +1,13 @@
 package com.saintolivetree.stripe_events_listener_service.dto;
 
 import lombok.Builder;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.util.Map;
 
 @Builder
+@Getter
 public class DonationDetails {
     private String donorName;
     private String donorEmail;
@@ -14,6 +16,7 @@ public class DonationDetails {
     private String cause;
     private String donationDate;
     private String certificateDate;
+    private String donorId;
 
     public Map<String, Object> toMap() {
         return Map.of(
@@ -23,7 +26,8 @@ public class DonationDetails {
                 "amount", amount,
                 "cause", cause,
                 "donationDate", donationDate,
-                "certificateDate", certificateDate
+                "certificateDate", certificateDate,
+                "donorId", donorId
         );
     }
 }

@@ -4,6 +4,7 @@ import com.saintolivetree.stripe_events_listener_service.model.DonorNotification
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import org.springframework.stereotype.Repository;
+import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 
 @Repository
@@ -19,6 +20,6 @@ public class DonorNotificationRepository {
     }
 
     public DonorNotification findById(String id) {
-        return table.getItem(r -> r.key(k -> k.partitionValue(id)));
+        return table.getItem(Key.builder().partitionValue(id).build());
     }
 }

@@ -16,7 +16,7 @@ import java.net.URI;
 @Configuration
 public class AwsConfig {
 
-    @Value("${amazon.dynamodb.url}")
+    @Value("${amazon.dynamodb.url:}")
     private String dynamodbUrl;
 
     @Value("${amazon.aws.accesskey:}")
@@ -46,6 +46,7 @@ public class AwsConfig {
                         StaticCredentialsProvider.create(AwsBasicCredentials.create(awsAccessKey, awsSecretKey)
                         )
                 )
+                .endpointOverride(URI.create(dynamodbUrl))
                 .build();
         return client;
     }
@@ -56,7 +57,6 @@ public class AwsConfig {
         DynamoDbClient client = DynamoDbClient.builder()
                 .region(Region.of(awsRegion))
                 .credentialsProvider(InstanceProfileCredentialsProvider.create())
-                .endpointOverride(URI.create(dynamodbUrl))
                 .build();
         return client;
     }

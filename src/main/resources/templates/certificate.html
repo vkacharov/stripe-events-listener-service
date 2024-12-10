@@ -17,21 +17,21 @@
 
         @font-face {
             font-family: 'BukhariScript-Regular';
-            src: url('classpath:/static/fonts/BukhariScript-Regular.ttf');
+            src: url('classpath:static/fonts/BukhariScript-Regular.ttf');
             -fs-pdf-font-embed: embed;
             -fs-pdf-font-encoding: Identity-H;
         }
 
         @font-face {
             font-family: 'Lobster-Regular';
-            src: url('classpath:/static/fonts/Lobster-Regular.ttf');
+            src: url('classpath:static/fonts/Lobster-Regular.ttf');
             -fs-pdf-font-embed: embed;
             -fs-pdf-font-encoding: Identity-H;
         }
 
         @font-face {
             font-family: 'Arimo';
-            src: url('classpath:/static/fonts/Arimo-VariableFont_wght.ttf');
+            src: url('classpath:static/fonts/Arimo-VariableFont_wght.ttf');
             -fs-pdf-font-embed: embed;
             -fs-pdf-font-encoding: Identity-H;
         }
@@ -40,7 +40,7 @@
             width: 100%;
             height: 100%;
 
-            background-image: url('classpath:/static/images/background.png');
+            background-image: url('classpath:static/images/background.png');
             background-size: 98.2%;
             background-position: 10px 10px;
             background-repeat: no-repeat;
@@ -70,18 +70,18 @@
             font-family: Lobster-Regular;
             font-size:36.5px;
             color: #8d5778;
-            margin-bottom: 50px;
+            margin-bottom: 25px;
         }
 
         .certificate-text {
-            font-size: 14px;
+            font-size: 21px;
             font-family: Arimo;
         }
 
         .certificate-given-to {
             color: #346d9a;
             font-family: Arimo;
-            font-size: 15.5px;
+            font-size: 18px;
         }
 
         .certificate-signature {
@@ -99,14 +99,14 @@
 
         .certificate-signature-name {
             font-family: BukhariScript-Regular;
-            font-size: 17px;
+            font-size: 18px;
             color: #346d9a;
         }
 
         .certificate-signature-position {
             color: #346d9a;
             font-family: Arimo;
-            font-size: 12px;
+            font-size: 18px;
         }
 
         .certificate-crest {
@@ -130,7 +130,7 @@
 <body>
     <div class="certificate-body" >
         <div class="certificate-header">
-            <img class="certificate-logo" alt="bear-logo" src="classpath:/static/images/bear-logo.png" />
+            <img class="certificate-logo" alt="bear-logo" src="classpath:static/images/bear-logo.png" />
             <h1>СЕРТИФИКАТ ЗА ДАРЕНИЕ</h1>
             <div class="certificate-given-to">се връчва на</div>
             <div class="certificate-donor" th:text="${donorName}"></div>
@@ -155,7 +155,7 @@
                 [[${donationDate}]]
             </div>
             лого
-            <img class="certificate-crest" alt="certificate-crest" src="classpath:/static/images/crest.png" />
+            <img class="certificate-crest" alt="certificate-crest" src="classpath:static/images/crest.png" />
         </div>
     </div>
 </body>

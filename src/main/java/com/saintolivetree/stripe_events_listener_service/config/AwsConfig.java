@@ -2,9 +2,8 @@ package com.saintolivetree.stripe_events_listener_service.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.InstanceProfileCredentialsProvider;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
@@ -18,12 +17,6 @@ public class AwsConfig {
 
     @Value("${amazon.dynamodb.url:}")
     private String dynamodbUrl;
-
-    @Value("${amazon.aws.accesskey:}")
-    private String awsAccessKey;
-
-    @Value("${amazon.aws.secretkey:}")
-    private String awsSecretKey;
 
     @Value("${amazon.aws.region}")
     private String awsRegion;
@@ -42,10 +35,7 @@ public class AwsConfig {
     public DynamoDbClient dynamoDbDevClient() {
         DynamoDbClient client = DynamoDbClient.builder()
                 .region(Region.of(awsRegion))
-                .credentialsProvider(
-                        StaticCredentialsProvider.create(AwsBasicCredentials.create(awsAccessKey, awsSecretKey)
-                        )
-                )
+                .credentialsProvider(DefaultCredentialsProvider.create())
                 .endpointOverride(URI.create(dynamodbUrl))
                 .build();
         return client;

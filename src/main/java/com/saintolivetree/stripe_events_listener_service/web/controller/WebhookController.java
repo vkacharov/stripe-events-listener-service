@@ -29,18 +29,14 @@ public class WebhookController {
     public void generatePdf(@RequestBody String payload,
                             HttpServletRequest request,
                             HttpServletResponse response) {
-        try {
-            Event event = stripeService.resolveEvent(payload, request.getHeader("Stripe-Signature"));
-            if (stripeEventHandler.getEventType().equals(event.getType())) {
-                stripeEventHandler.handleEvent(event);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.setStatus(400);
+        Event event = stripeService.resolveEvent(payload, request.getHeader("Stripe-Signature"));
+        if (stripeEventHandler.getEventType().equals(event.getType())) {
+            stripeEventHandler.handleEvent(event);
         }
     }
 
     @GetMapping("/unsubscribe")
+    @ResponseBody
     public ResponseEntity<String> unsubscribe(@RequestParam(name = "d") String encryptedDonorId) {
         String donorId = encryptionService.decrypt(encryptedDonorId);
         donorNotificationStatusService.unsubscribe(donorId);

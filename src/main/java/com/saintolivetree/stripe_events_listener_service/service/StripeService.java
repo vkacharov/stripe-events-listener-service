@@ -1,5 +1,6 @@
 package com.saintolivetree.stripe_events_listener_service.service;
 
+import com.saintolivetree.stripe_events_listener_service.exception.StripeException;
 import com.stripe.Stripe;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
@@ -20,22 +21,27 @@ public class StripeService {
         this.endpointSecret = endpointSecret;
     }
 
-    public Event resolveEvent(String payload, String sigHeader) throws SignatureVerificationException {
+    public Event resolveEvent(String payload, String sigHeader) {
         if(sigHeader != null) {
-           Event event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
-           return event;
+            try {
+                Event event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
+                return event;
+            } catch (SignatureVerificationException s) {
+                throw new StripeException("Failed to construct Stripe event.", s);
+            }
+
         } else {
-            throw new SignatureVerificationException("No sigHeader found in request", sigHeader);
+            throw new StripeException("No sigHeader found in Stripe request.");
         }
     }
 
     public StripeObject deserializeStripeObject(Event event) {
         EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
-        StripeObject stripeObject = null;
         if (dataObjectDeserializer.getObject().isPresent()) {
-            stripeObject = dataObjectDeserializer.getObject().get();
+            StripeObject stripeObject = dataObjectDeserializer.getObject().get();
+            return stripeObject;
         }
 
-        return stripeObject;
+        throw new StripeException("Failed to deserialize StripeObject from event.");
     }
 }

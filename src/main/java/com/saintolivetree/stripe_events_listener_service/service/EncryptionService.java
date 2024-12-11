@@ -1,5 +1,6 @@
 package com.saintolivetree.stripe_events_listener_service.service;
 
+import com.saintolivetree.stripe_events_listener_service.exception.EncryptionException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ public class EncryptionService {
 
             return Base64.getUrlEncoder().withoutPadding().encodeToString(encryptedMessageBytes);
         } catch (Exception e) {
-            throw new RuntimeException(e); //FIXME
+            throw new EncryptionException("Failed to encrypt message", e);
         }
     }
 
@@ -35,7 +36,7 @@ public class EncryptionService {
 
             return new String(decryptedMessageBytes);
         } catch (Exception e) {
-            throw new RuntimeException(e); //FIXME
+            throw new EncryptionException("Fail to dencrypt message: " + encryptedMessage, e);
         }
     }
 }

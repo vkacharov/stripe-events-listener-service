@@ -1,6 +1,7 @@
 package com.saintolivetree.stripe_events_listener_service.service;
 
 import com.saintolivetree.stripe_events_listener_service.dto.DonationDetails;
+import com.saintolivetree.stripe_events_listener_service.exception.TemplateException;
 import com.stripe.model.Charge;
 import org.springframework.stereotype.Service;
 
@@ -59,7 +60,7 @@ public class DonationDetailsService {
         if (currencies.containsKey(chargeCurrency)) {
             return currencies.get(chargeCurrency);
         } else {
-            throw new RuntimeException("Currency not found"); //FIXME
+            throw new TemplateException("Currency not found: " + chargeCurrency);
         }
     }
 
@@ -70,7 +71,7 @@ public class DonationDetailsService {
             }
         }
 
-        throw new RuntimeException("Cause not found"); //FIXME
+        throw new TemplateException("Cause not found: " + causes);
     }
 
     private BigDecimal formatAmount(long amountInCents) {

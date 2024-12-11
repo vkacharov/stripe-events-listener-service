@@ -1,5 +1,6 @@
 package com.saintolivetree.stripe_events_listener_service.service;
 
+import com.saintolivetree.stripe_events_listener_service.exception.MailException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +22,21 @@ public class MailService {
           String subject,
           String text,
           byte[] attachment
-    ) throws MessagingException {
-        MimeMessage message = emailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+    ) {
+        try {
+            MimeMessage message = emailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        helper.setFrom("no-reply@plushenomeche.org");
-        helper.setTo(to);
-        helper.setSubject(subject);
-        helper.setText(text);
+            helper.setFrom("no-reply@plushenomeche.org");
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(text);
 
-        InputStreamSource inputStreamSource = new ByteArrayResource(attachment);
-        helper.addAttachment("donation-certificate.pdf", inputStreamSource, "application/pdf");
-        emailSender.send(message);
+            InputStreamSource inputStreamSource = new ByteArrayResource(attachment);
+            helper.addAttachment("donation-certificate.pdf", inputStreamSource, "application/pdf");
+            emailSender.send(message);
+        } catch (MessagingException m) {
+            throw new MailException("Failed to send email.", m);
+        }
     }
 }

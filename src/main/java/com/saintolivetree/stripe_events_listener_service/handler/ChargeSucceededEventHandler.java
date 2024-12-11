@@ -36,7 +36,7 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
     }
 
     @Override
-    protected void handleStripeObject(StripeObject stripeObject) throws Exception {
+    protected void handleStripeObject(StripeObject stripeObject) {
         Charge charge = (Charge) stripeObject;
         DonationDetails donationDetails = donationDetailsService.extractDonationDetails(charge);
 

@@ -11,10 +11,10 @@ public abstract class StripeEventHandler {
 
     public abstract String getEventType();
 
-    public void handleEvent(Event event) throws Exception {
+    public void handleEvent(Event event) {
         StripeObject stripeObject = stripeService.deserializeStripeObject(event);
         handleStripeObject(stripeObject);
     }
 
-    protected abstract void handleStripeObject(StripeObject stripeObject) throws Exception;
+    protected abstract void handleStripeObject(StripeObject stripeObject);
 }

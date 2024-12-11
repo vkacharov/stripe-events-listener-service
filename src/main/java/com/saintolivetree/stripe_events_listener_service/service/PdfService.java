@@ -1,4 +1,5 @@
 package com.saintolivetree.stripe_events_listener_service.service;
+import com.saintolivetree.stripe_events_listener_service.exception.PdfException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class PdfService {
 
            return outputStream.toByteArray();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to generate PDF", e);
+            throw new PdfException("Failed to generate PDF", e);
         }
     }
 }

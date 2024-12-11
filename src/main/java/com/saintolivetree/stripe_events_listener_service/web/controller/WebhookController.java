@@ -2,6 +2,7 @@ package com.saintolivetree.stripe_events_listener_service.web.controller;
 
 import com.saintolivetree.stripe_events_listener_service.handler.StripeEventHandler;
 import com.saintolivetree.stripe_events_listener_service.service.DonorNotificationStatusService;
+import com.saintolivetree.stripe_events_listener_service.service.EncryptionService;
 import com.saintolivetree.stripe_events_listener_service.service.StripeService;
 import com.stripe.model.Event;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +22,9 @@ public class WebhookController {
     @Autowired
     private DonorNotificationStatusService donorNotificationStatusService;
 
+    @Autowired
+    private EncryptionService encryptionService;
+
     @PostMapping("/webhook")
     public void generatePdf(@RequestBody String payload,
                             HttpServletRequest request,
@@ -37,8 +41,9 @@ public class WebhookController {
     }
 
     @GetMapping("/unsubscribe")
-    public ResponseEntity<Void> unsubscribe(@RequestParam(name = "d") String donorId) {
+    public ResponseEntity<String> unsubscribe(@RequestParam(name = "d") String encryptedDonorId) {
+        String donorId = encryptionService.decrypt(encryptedDonorId);
         donorNotificationStatusService.unsubscribe(donorId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body("Бяхте успешно отписани.");
     }
 }

@@ -7,6 +7,7 @@ import com.stripe.model.Charge;
 import com.stripe.model.StripeObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.util.Map;
@@ -30,6 +31,9 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
     @Autowired
     private EncryptionService encryptionService;
 
+    @Autowired
+    private TemplateEngine templateEngine;
+
     @Override
     public String getEventType() {
         return "charge.succeeded";
@@ -47,20 +51,20 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
             // TODO: log metric
             return;
         }
-        
-        Map<String, Object> templateVariables = donationDetails.toMap();
-        byte[] pdf = createPdf(templateVariables);
 
+        Map<String, Object> templateVariables = donationDetails.toMap();
         String unsubscribeUrl = createUnsubscribeUrl(donorId);
+        templateVariables.put("unsubscribeUrl", unsubscribeUrl);
+
+        byte[] pdf = createPdf(templateVariables);
+        String emailContent = createEmailContent(templateVariables);
 
         mailService.sendEmail(
                 "velizar.kacharov@gmail.com",
-                "Благодарим ви за Вашето дарение",
-                String.format("""
-                    Екипът на Сдружение Операция: Плюшено Мече Ви благодари за Вашето дарение.
-                    За да се отпишете, последвайте този линк %s
-                """, unsubscribeUrl),
-                pdf);
+                "Благодарим Ви за Вашето дарение",
+               emailContent,
+                pdf)
+        ;
     }
 
     private byte[] createPdf(Map<String, Object> templateVariables) {
@@ -75,5 +79,12 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
         return String.format(
                 "http://localhost:8080/unsubscribe?d=%s",
                 encryptedDonorId);
+    }
+
+    private String createEmailContent(Map<String, Object> templateVariables) {
+        Context context = new Context();
+        context.setVariables(templateVariables);
+        String html = templateEngine.process("email", context);
+        return html;
     }
 }

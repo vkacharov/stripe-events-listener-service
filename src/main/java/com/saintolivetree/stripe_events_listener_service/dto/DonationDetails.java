@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 
 @Builder
@@ -19,7 +20,7 @@ public class DonationDetails {
     private String donorId;
 
     public Map<String, Object> toMap() {
-        return Map.of(
+        return new HashMap<>(Map.of(
                 "donorName", donorName,
                 "donorEmail", donorEmail,
                 "currency", currency,
@@ -28,6 +29,6 @@ public class DonationDetails {
                 "donationDate", donationDate,
                 "certificateDate", certificateDate,
                 "donorId", donorId
-        );
+        ));
     }
 }

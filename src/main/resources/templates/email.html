@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        .email-body {
+            font-family: Verdana, Geneva, sans-serif;
+        }
+
+        .email-contact, .email-contact a {
+            color: #f47d34;
+            font-size: 14px;
+        }
+
+        .email-image {
+            color: #843fa1;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .email-image img {
+            width: 485px;
+            aspect-ratio: auto 485 / 162;
+            height: 162px;
+        }
+
+        .email-unsubscribe {
+            color: #5e5e5e;
+            font-size: 10px;
+            margin: 3em 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-body">
+        <div class="email-text">
+            Екипът на Сдружение Операция: Плюшено Мече Ви благодари за направеното дарение!<br/>
+            Можете да намерите своя сертификат за дарение в прикачения файл.
+            <br/><br/><br/><br/>
+            ---
+            <br/>
+        </div>
+        <div class="email-signature">
+            <div class="email-contact">
+                <strong>Михаела Качарова</strong><br/>
+                <strong>Основател и изпълнителен директор</strong><br/>
+                <strong>Сдружение „Операция: Плюшено Мече"</strong><br/>
+                <strong><a href="https://plushenomeche.org/bg/home/" target="_blank">www.plushenomeche.org</a></strong><br/>
+                <strong>тел. 0888 044 009</strong><br/>
+                <strong>гр. София, пл. Славейков № 1, вх. В, ет. 4</strong><br/>
+            </div>
+            <div class="email-image">
+                <p>17 години заедно връщаме детството и бъдещето на българските деца</p>
+                <a href="https://plusheno-meche.cloudcart.net/product/detska-kniga-po-deystvitelen-sluchay-talantlivoto-meche-moni"
+                   target="_blank">
+                    <img src="cid:BookLinkImage" alt="book link image" />
+                </a>
+            </div>
+        </div>
+        <div class="email-unsubscribe">
+            Ако не желаете да получавате повече съобщения като това, може да се отпишете <a th:href="@{${unsubscribeUrl}}">тук</a>.
+        </div>
+    </div>
+</body>

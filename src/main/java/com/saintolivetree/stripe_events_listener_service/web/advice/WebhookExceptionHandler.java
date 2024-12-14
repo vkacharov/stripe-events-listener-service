@@ -14,6 +14,7 @@ public class WebhookExceptionHandler {
     @ResponseBody
     public String handleException(Exception e) {
         //TODO log metric based on the exception class
+        e.printStackTrace();
         return "Възникна проблем при обработката на заявката. Моля, опитайте отново.";
 
     }

@@ -10,12 +10,12 @@ phases:
   pre_build:
     commands:
       - |
-        echo "spring.mail.username=SPRING_MAIL_USERNAME" > src/main/resources/secrets.properties
-        echo "spring.mail.password=SPRING_MAIL_PASSWORD" >> src/main/resources/secrets.properties
-        echo "spring.mail.host=SPRING_MAIL_HOST" >> src/main/resources/secrets.properties
-        echo "stripe.api.key=STRIPE_API_KEY" >> src/main/resources/secrets.properties
-        echo "stripe.endpoint.secret=STRIPE_ENDPOINT_SECRET" >> src/main/resources/secrets.properties
-        echo "encryption.key=ENCRYPTION_KEY" >> src/main/resources/secrets.properties
+        echo "spring.mail.username=$SPRING_MAIL_USERNAME" > src/main/resources/secrets.properties
+        echo "spring.mail.password=$SPRING_MAIL_PASSWORD" >> src/main/resources/secrets.properties
+        echo "spring.mail.host=$SPRING_MAIL_HOST" >> src/main/resources/secrets.properties
+        echo "stripe.api.key=$STRIPE_API_KEY" >> src/main/resources/secrets.properties
+        echo "stripe.endpoint.secret=$STRIPE_ENDPOINT_SECRET" >> src/main/resources/secrets.properties
+        echo "encryption.key=$ENCRYPTION_KEY" >> src/main/resources/secrets.properties
 
   build:
     commands:

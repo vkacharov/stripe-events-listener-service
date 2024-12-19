@@ -7,6 +7,8 @@ import com.saintolivetree.stripe_events_listener_service.service.StripeService;
 import com.stripe.model.Event;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,8 @@ public class WebhookController {
     @Autowired
     private EncryptionService encryptionService;
 
+    private static final Logger logger = LoggerFactory.getLogger(WebhookController.class);
+
     @PostMapping("/webhook")
     public void generatePdf(@RequestBody String payload,
                             HttpServletRequest request,
@@ -40,6 +44,7 @@ public class WebhookController {
     public ResponseEntity<String> unsubscribe(@RequestParam(name = "d") String encryptedDonorId) {
         String donorId = encryptionService.decrypt(encryptedDonorId);
         donorNotificationStatusService.unsubscribe(donorId);
+        logger.info("Donor with id {} unsubscribed.", encryptedDonorId);
         return ResponseEntity.ok().body("Бяхте успешно отписани.");
     }
 }

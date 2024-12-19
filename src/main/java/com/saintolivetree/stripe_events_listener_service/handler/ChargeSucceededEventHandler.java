@@ -3,9 +3,13 @@ package com.saintolivetree.stripe_events_listener_service.handler;
 import com.saintolivetree.stripe_events_listener_service.dto.DonationDetails;
 import com.saintolivetree.stripe_events_listener_service.model.DonorNotification;
 import com.saintolivetree.stripe_events_listener_service.service.*;
+import com.saintolivetree.stripe_events_listener_service.web.advice.WebhookExceptionHandler;
 import com.stripe.model.Charge;
 import com.stripe.model.StripeObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -15,6 +19,9 @@ import java.util.Optional;
 
 @Service
 public class ChargeSucceededEventHandler extends StripeEventHandler {
+
+    @Value("${public.url}")
+    private String publicUrl;
 
     @Autowired
     private PdfService pdfService;
@@ -31,6 +38,11 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
     @Autowired
     private TemplateEngine templateEngine;
 
+    @Autowired
+    private EncryptionService encryptionService;
+
+    private static final Logger logger = LoggerFactory.getLogger(WebhookExceptionHandler.class);
+
     @Override
     public String getEventType() {
         return "charge.succeeded";
@@ -42,15 +54,19 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
         DonationDetails donationDetails = donationDetailsService.extractDonationDetails(charge);
 
         String donorId = donationDetails.getDonorId();
+        String encryptedDonorId = encryptionService.encrypt(donorId);
+
+        logger.info("Received a charge.succeeded event for Donor with id {}.", encryptedDonorId);
+
         Optional<DonorNotification.NotificationStatus> status =
                 donorNotificationStatusService.getNotificationStatus(donorId);
         if (status.isPresent() && DonorNotification.NotificationStatus.DISABLED.equals(status.get())) {
-            // TODO: log metric
+            logger.info("Donor with id {} has unsubscribed. Not sending an email.", encryptedDonorId);
             return;
         }
 
         Map<String, Object> templateVariables = donationDetails.toMap();
-        String unsubscribeUrl = mailService.createUnsubscribeUrl(donorId);
+        String unsubscribeUrl = createUnsubscribeUrl(encryptedDonorId);
         templateVariables.put("unsubscribeUrl", unsubscribeUrl);
 
         byte[] pdf = createPdf(templateVariables);
@@ -60,8 +76,9 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
                 "velizar.kacharov@gmail.com",
                 "Благодарим Ви за Вашето дарение",
                emailContent,
-                pdf)
-        ;
+                pdf);
+
+        logger.info("Successfully sent an email to Donor with id {}.", encryptedDonorId);
     }
 
     private byte[] createPdf(Map<String, Object> templateVariables) {
@@ -76,5 +93,12 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
         context.setVariables(templateVariables);
         String html = templateEngine.process("email", context);
         return html;
+    }
+
+
+    public String createUnsubscribeUrl(String encryptedDonorId) {
+        return String.format(
+                publicUrl + "unsubscribe?d=%s",
+                encryptedDonorId);
     }
 }

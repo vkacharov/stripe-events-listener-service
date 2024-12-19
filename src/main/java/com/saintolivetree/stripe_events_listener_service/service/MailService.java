@@ -14,27 +14,22 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MailService {
-    @Value("${public.url}")
-    private String publicUrl;
 
     @Autowired
     private JavaMailSender emailSender;
 
-    @Autowired
-    private EncryptionService encryptionService;
-
     public void sendEmail(
-          String to,
-          String subject,
-          String text,
-          byte[] attachment
+            String recipientEmail,
+            String subject,
+            String text,
+            byte[] attachment
     ) {
         try {
             MimeMessage message = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
             helper.setFrom("no-reply@plushenomeche.org");
-            helper.setTo(to);
+            helper.setTo(recipientEmail);
             helper.setSubject(subject);
             helper.setText(text, true);
 
@@ -48,12 +43,5 @@ public class MailService {
         } catch (MessagingException m) {
             throw new MailException("Failed to send email.", m);
         }
-    }
-
-    public String createUnsubscribeUrl(String donorId) {
-        String encryptedDonorId = encryptionService.encrypt(donorId);
-        return String.format(
-                publicUrl + "unsubscribe?d=%s",
-                encryptedDonorId);
     }
 }

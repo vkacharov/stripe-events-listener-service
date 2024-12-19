@@ -53,7 +53,7 @@ public class MailService {
     public String createUnsubscribeUrl(String donorId) {
         String encryptedDonorId = encryptionService.encrypt(donorId);
         return String.format(
-                publicUrl + "/unsubscribe?d=%s",
+                publicUrl + "unsubscribe?d=%s",
                 encryptedDonorId);
     }
 }

@@ -29,9 +29,6 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
     private DonorNotificationStatusService donorNotificationStatusService;
 
     @Autowired
-    private EncryptionService encryptionService;
-
-    @Autowired
     private TemplateEngine templateEngine;
 
     @Override
@@ -53,7 +50,7 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
         }
 
         Map<String, Object> templateVariables = donationDetails.toMap();
-        String unsubscribeUrl = createUnsubscribeUrl(donorId);
+        String unsubscribeUrl = mailService.createUnsubscribeUrl(donorId);
         templateVariables.put("unsubscribeUrl", unsubscribeUrl);
 
         byte[] pdf = createPdf(templateVariables);
@@ -72,13 +69,6 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
         context.setVariables(templateVariables);
         byte[] pdf = pdfService.generatePdf("certificate", context);
         return pdf;
-    }
-
-    private String createUnsubscribeUrl(String donorId) {
-        String encryptedDonorId = encryptionService.encrypt(donorId);
-        return String.format(
-                "http://localhost:8080/unsubscribe?d=%s",
-                encryptedDonorId);
     }
 
     private String createEmailContent(Map<String, Object> templateVariables) {

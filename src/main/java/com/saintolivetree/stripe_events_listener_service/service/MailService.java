@@ -4,6 +4,7 @@ import com.saintolivetree.stripe_events_listener_service.exception.MailException
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamSource;
@@ -13,9 +14,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MailService {
+    @Value("${public.url}")
+    private String publicUrl;
 
     @Autowired
     private JavaMailSender emailSender;
+
+    @Autowired
+    private EncryptionService encryptionService;
 
     public void sendEmail(
           String to,
@@ -42,5 +48,12 @@ public class MailService {
         } catch (MessagingException m) {
             throw new MailException("Failed to send email.", m);
         }
+    }
+
+    public String createUnsubscribeUrl(String donorId) {
+        String encryptedDonorId = encryptionService.encrypt(donorId);
+        return String.format(
+                publicUrl + "/unsubscribe?d=%s",
+                encryptedDonorId);
     }
 }

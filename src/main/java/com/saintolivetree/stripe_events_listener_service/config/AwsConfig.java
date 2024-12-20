@@ -4,6 +4,7 @@ import io.micrometer.cloudwatch2.CloudWatchConfig;
 import io.micrometer.cloudwatch2.CloudWatchMeterRegistry;
 import io.micrometer.core.instrument.Clock;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.config.MeterFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
@@ -97,6 +98,13 @@ public class AwsConfig {
             }
         };
         return cloudWatchConfig;
+    }
+
+    @Bean
+    @Profile("prod")
+    public MeterFilter disableAllDefaultMetrics() {
+        // Deny registration of all metrics by default
+        return MeterFilter.deny(id -> true);
     }
 
 }

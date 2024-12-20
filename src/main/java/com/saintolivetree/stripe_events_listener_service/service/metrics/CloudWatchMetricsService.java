@@ -14,7 +14,9 @@ public class CloudWatchMetricsService implements MetricsService {
 
     @Override
     public void incrementMetric(String metric) {
-        Counter counter = meterRegistry.counter(metric);
+        Counter counter = Counter
+                .builder(metric)
+                .register(meterRegistry);
         counter.increment();
     }
 }

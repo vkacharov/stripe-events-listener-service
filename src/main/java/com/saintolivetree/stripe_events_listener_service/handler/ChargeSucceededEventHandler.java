@@ -45,7 +45,7 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
     @Autowired
     private MetricsService metricsService;
 
-    private static final Logger logger = LoggerFactory.getLogger(WebhookExceptionHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ChargeSucceededEventHandler.class);
 
     @Override
     public String getEventType() {

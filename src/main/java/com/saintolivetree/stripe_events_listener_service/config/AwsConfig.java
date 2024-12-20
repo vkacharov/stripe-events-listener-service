@@ -89,7 +89,7 @@ public class AwsConfig {
         CloudWatchConfig cloudWatchConfig = new CloudWatchConfig() {
 
             private Map<String, String> configuration = Map.of(
-                    "cloudwatch.namespace", "StripeEventsListenerService",
+                    "cloudwatch.namespace", "StripeEventsListenerService-Prod",
                     "cloudwatch.step", Duration.ofMinutes(1).toString());
 
             @Override

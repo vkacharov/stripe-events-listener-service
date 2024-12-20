@@ -3,6 +3,7 @@ package com.saintolivetree.stripe_events_listener_service.handler;
 import com.saintolivetree.stripe_events_listener_service.dto.DonationDetails;
 import com.saintolivetree.stripe_events_listener_service.model.DonorNotification;
 import com.saintolivetree.stripe_events_listener_service.service.*;
+import com.saintolivetree.stripe_events_listener_service.service.metrics.MetricsService;
 import com.saintolivetree.stripe_events_listener_service.web.advice.WebhookExceptionHandler;
 import com.stripe.model.Charge;
 import com.stripe.model.StripeObject;
@@ -41,6 +42,9 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
     @Autowired
     private EncryptionService encryptionService;
 
+    @Autowired
+    private MetricsService metricsService;
+
     private static final Logger logger = LoggerFactory.getLogger(WebhookExceptionHandler.class);
 
     @Override
@@ -62,6 +66,7 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
                 donorNotificationStatusService.getNotificationStatus(donorId);
         if (status.isPresent() && DonorNotification.NotificationStatus.DISABLED.equals(status.get())) {
             logger.info("Donor with id {} has unsubscribed. Not sending an email.", encryptedDonorId);
+            metricsService.incrementMetric("event.UnsubscribeEventSkipped");
             return;
         }
 
@@ -79,6 +84,7 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
                 pdf);
 
         logger.info("Successfully sent an email to Donor with id {}.", encryptedDonorId);
+        metricsService.incrementMetric("event.CertificateEmailSucceeded");
     }
 
     private byte[] createPdf(Map<String, Object> templateVariables) {

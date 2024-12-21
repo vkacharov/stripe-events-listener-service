@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class MailService {
 
+    @Value("${admin.email}")
+    private String adminEmail;
+
     @Autowired
     private JavaMailSender emailSender;
 
@@ -32,6 +35,7 @@ public class MailService {
             helper.setTo(recipientEmail);
             helper.setSubject(subject);
             helper.setText(text, true);
+            helper.setBcc(adminEmail);
 
             ClassPathResource imageResource = new ClassPathResource("static/images/book.png");
             helper.addInline("BookLinkImage", imageResource);

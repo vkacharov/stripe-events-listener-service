@@ -26,7 +26,6 @@ public class StripeService {
 
     public Event resolveEvent(String payload, String sigHeader) {
         if(sigHeader != null) {
-            logger.info("SIG HEADER " + sigHeader);
             try {
                 Event event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
                 return event;
@@ -40,13 +39,12 @@ public class StripeService {
     }
 
     public StripeObject deserializeStripeObject(Event event) {
-        logger.info("EVENT: " + event.toJson().replace("\r", "").replace("\n", " | "));
         EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
         if (dataObjectDeserializer.getObject().isPresent()) {
             StripeObject stripeObject = dataObjectDeserializer.getObject().get();
             return stripeObject;
         } else {
-            logger.error("StripeObject not present");
+            logger.error("StripeObject not present.");
         }
 
         throw new StripeException("Failed to deserialize StripeObject from event.");

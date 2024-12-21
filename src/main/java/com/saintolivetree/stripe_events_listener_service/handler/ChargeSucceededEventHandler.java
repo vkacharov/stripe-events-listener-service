@@ -82,7 +82,7 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
         String emailContent = createEmailContent(templateVariables);
 
         mailService.sendEmail(
-                "velizar.kacharov@gmail.com",
+                adminEmail,
                 "Благодарим Ви за Вашето дарение",
                emailContent,
                 pdf);

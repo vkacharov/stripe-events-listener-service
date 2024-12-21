@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,8 +35,8 @@ public class WebhookController {
 
     @PostMapping("/webhook")
     @ResponseBody
-    public void handleStripeEvent(@RequestBody String payload,
-                            HttpServletRequest request) {
+    public ResponseEntity<Void> handleStripeEvent(@RequestBody String payload,
+                                            HttpServletRequest request) {
         metricsService.incrementMetric("event.StripeEventReceived");
         Event event = stripeService.resolveEvent(payload, request.getHeader("Stripe-Signature"));
         if (stripeEventHandler.getEventType().equals(event.getType())) {
@@ -44,6 +45,8 @@ public class WebhookController {
             logger.error("Unknown event type received {}", event.getType());
             metricsService.incrementMetric("error.UnknownStripeEvent");
         }
+
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/unsubscribe")

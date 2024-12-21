@@ -7,12 +7,15 @@ import com.stripe.model.Event;
 import com.stripe.model.EventDataObjectDeserializer;
 import com.stripe.model.StripeObject;
 import com.stripe.net.Webhook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StripeService {
 
+    private static final Logger logger = LoggerFactory.getLogger(StripeService.class);
     private final String endpointSecret;
 
     public StripeService(@Value("${stripe.api.key}") String stripeApiKey,
@@ -23,6 +26,7 @@ public class StripeService {
 
     public Event resolveEvent(String payload, String sigHeader) {
         if(sigHeader != null) {
+            logger.info("SIG HEADER " + sigHeader);
             try {
                 Event event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
                 return event;
@@ -36,10 +40,13 @@ public class StripeService {
     }
 
     public StripeObject deserializeStripeObject(Event event) {
+        logger.info("EVENT: " + event.toJson().replace("\r", "").replace("\n", " | "));
         EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
         if (dataObjectDeserializer.getObject().isPresent()) {
             StripeObject stripeObject = dataObjectDeserializer.getObject().get();
             return stripeObject;
+        } else {
+            logger.error("StripeObject not present");
         }
 
         throw new StripeException("Failed to deserialize StripeObject from event.");

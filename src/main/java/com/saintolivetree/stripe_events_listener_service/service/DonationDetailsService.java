@@ -36,7 +36,7 @@ public class DonationDetailsService {
 
     public DonationDetails extractDonationDetails(Charge charge) {
         String donorName = charge.getBillingDetails().getName();
-        String donorEmail = charge.getReceiptEmail();
+        String donorEmail = charge.getBillingDetails().getEmail();
         String currency = extractCurrency(charge.getCurrency());
         BigDecimal amount = formatAmount(charge.getAmount());
         String chargeDescription = charge.getDescription();

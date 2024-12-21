@@ -10,10 +10,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 public class WebhookController {
     @Autowired
     private StripeService stripeService;
@@ -33,7 +33,8 @@ public class WebhookController {
     private static final Logger logger = LoggerFactory.getLogger(WebhookController.class);
 
     @PostMapping("/webhook")
-    public void generatePdf(@RequestBody String payload,
+    @ResponseBody
+    public void handleStripeEvent(@RequestBody String payload,
                             HttpServletRequest request) {
         metricsService.incrementMetric("event.StripeEventReceived");
         Event event = stripeService.resolveEvent(payload, request.getHeader("Stripe-Signature"));
@@ -46,13 +47,12 @@ public class WebhookController {
     }
 
     @GetMapping("/unsubscribe")
-    @ResponseBody
-    public ResponseEntity<String> unsubscribe(@RequestParam(name = "d") String encryptedDonorId) {
+    public String unsubscribe(@RequestParam(name = "d") String encryptedDonorId) {
         metricsService.incrementMetric("event.UnsubscribeEventReceived");
         String donorId = encryptionService.decrypt(encryptedDonorId);
         donorNotificationStatusService.unsubscribe(donorId);
         logger.info("Donor with id {} unsubscribed.", encryptedDonorId);
         metricsService.incrementMetric("event.UnsubscribeEventSucceeded");
-        return ResponseEntity.ok().body("Бяхте успешно отписани.");
+        return "unsubscribed";
     }
 }

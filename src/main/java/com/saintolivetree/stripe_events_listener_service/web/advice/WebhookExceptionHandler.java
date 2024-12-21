@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Map;
@@ -23,14 +22,14 @@ public class WebhookExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ResponseBody
-    public String handleException(Exception e) {
+    public void handleException(Exception e) throws Exception {
         String errorMetricName = "error.Exception";
         if(e instanceof EventHandlingException) {
             errorMetricName = "error." + e.getClass().getSimpleName();
         }
         logger.error("Exception caught", e);
         metricsService.incrementMetric(errorMetricName);
-        return "Възникна проблем при обработката на заявката. Моля, опитайте отново.";
+
+        throw  e;
     }
 }

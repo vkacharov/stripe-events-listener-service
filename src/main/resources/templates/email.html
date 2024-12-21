@@ -4,6 +4,7 @@
     <style>
         .email-body {
             font-family: Verdana, Geneva, sans-serif;
+            font-size: 14px;
         }
 
         .email-contact, .email-contact a {
@@ -34,7 +35,8 @@
     <div class="email-body">
         <div class="email-text">
             Екипът на Сдружение Операция: Плюшено Мече Ви благодари за направеното дарение!<br/>
-            Можете да намерите своя сертификат за дарение в прикачения файл.
+            Можете да намерите своя сертификат за дарение в прикачения файл.<br/>
+            За въпроси и обратна връзка, свържете се с нас на <a th:href="'mailto:' + ${adminEmail}">[[${adminEmail}]]</a>
             <br/><br/><br/><br/>
             ---
             <br/>

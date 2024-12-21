@@ -24,6 +24,9 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
     @Value("${public.url}")
     private String publicUrl;
 
+    @Value("${admin.email}")
+    private String adminEmail;
+
     @Autowired
     private PdfService pdfService;
 
@@ -73,6 +76,7 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
         Map<String, Object> templateVariables = donationDetails.toMap();
         String unsubscribeUrl = createUnsubscribeUrl(encryptedDonorId);
         templateVariables.put("unsubscribeUrl", unsubscribeUrl);
+        templateVariables.put("adminEmail", adminEmail);
 
         byte[] pdf = createPdf(templateVariables);
         String emailContent = createEmailContent(templateVariables);

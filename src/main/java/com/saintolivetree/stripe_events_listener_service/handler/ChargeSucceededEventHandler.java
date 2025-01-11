@@ -4,7 +4,6 @@ import com.saintolivetree.stripe_events_listener_service.dto.DonationDetails;
 import com.saintolivetree.stripe_events_listener_service.model.DonorNotification;
 import com.saintolivetree.stripe_events_listener_service.service.*;
 import com.saintolivetree.stripe_events_listener_service.service.metrics.MetricsService;
-import com.saintolivetree.stripe_events_listener_service.web.advice.WebhookExceptionHandler;
 import com.stripe.model.Charge;
 import com.stripe.model.StripeObject;
 import org.slf4j.Logger;
@@ -81,8 +80,10 @@ public class ChargeSucceededEventHandler extends StripeEventHandler {
         byte[] pdf = createPdf(templateVariables);
         String emailContent = createEmailContent(templateVariables);
 
+        String donorEmail = donationDetails.getDonorEmail();
+
         mailService.sendEmail(
-                adminEmail,
+                donorEmail,
                 "Благодарим Ви за Вашето дарение",
                emailContent,
                 pdf);
